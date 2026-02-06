@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL Mastery - Learn Database Development 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00758F;
+            --primary-dark: #005266;
+            --secondary: #F29111;
+            --accent: #E97451;
+            --bg-light: #FAFBFC;
+            --bg-dark: #0A1929;
+            --text-dark: #1A2332;
+            --text-light: #E8EEF3;
+            --border-color: #E1E8ED;
+            --success: #2E7D32;
+            --code-bg: #1E2A38;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Navigation - FIXED */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.4rem;
+            animation: rotate-logo 10s ease-in-out infinite;
+        }
+
+        @keyframes rotate-logo {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section with Enhanced Animations */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0A1929 0%, #1A3A52 100%);
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 117, 143, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(242, 145, 17, 0.1) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-text .highlight {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            color: rgba(232, 238, 243, 0.8);
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 117, 143, 0.3);
+            animation: pulse-btn 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-btn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 117, 143, 0.4);
+            animation: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-visual {
+            position: relative;
+            animation: fadeIn 1s ease-out 0.6s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .database-illustration {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .db-cylinder {
+            background: linear-gradient(135deg, rgba(0, 117, 143, 0.8), rgba(242, 145, 17, 0.6));
+            border-radius: 50px;
+            padding: 3rem;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: pulse-db 4s infinite ease-in-out;
+        }
+
+        @keyframes pulse-db {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+        }
+
+        .db-icon {
+            text-align: center;
+            font-size: 8rem;
+            color: white;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+            animation: expand 2s ease-in-out infinite;
+        }
+
+        @keyframes expand {
+            0%, 100% { width: 100px; }
+            50% { width: 150px; }
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* Enhanced Card Animations */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .concept-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .concept-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .concept-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .concept-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .concept-card:hover .concept-icon {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .concept-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .concept-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Code Block Styles */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .code-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-lang {
+            color: var(--secondary);
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        pre {
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #E8EEF3;
+        }
+
+        .keyword { color: #C792EA; }
+        .string { color: #C3E88D; }
+        .number { color: #F78C6C; }
+        .comment { color: #546E7A; }
+        .function { color: #82AAFF; }
+
+        /* Installation Section */
+        .installation-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 1rem 2.5rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .tab-btn:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .install-steps {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover .step-number {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .step-content h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .step-content p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Interview Questions Section */
+        .interview-section {
+            background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF3 100%);
+            border-radius: 30px;
+            padding: 4rem;
+            margin-top: 2rem;
+        }
+
+        .qa-container {
+            display: grid;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .qa-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .qa-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            border-left-width: 8px;
+        }
+
+        .qa-question {
+            padding: 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .qa-question:hover {
+            background: #F5F7FA;
+        }
+
+        .qa-question h4 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        .qa-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .qa-card.active .qa-icon {
+            transform: rotate(180deg);
+        }
+
+        .qa-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            background: #FAFBFC;
+        }
+
+        .qa-card.active .qa-answer {
+            max-height: 2000px;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .qa-answer p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .qa-answer ul, .qa-answer ol {
+            margin-left: 1.5rem;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .qa-answer li {
+            margin-bottom: 0.5rem;
+        }
+
+        .qa-answer code {
+            background: var(--code-bg);
+            color: #E8EEF3;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+
+        .difficulty-easy {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .difficulty-medium {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .difficulty-hard {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            animation: pulse-scroll 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-scroll {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px) scale(1.1);
+            animation: none;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(232, 238, 243, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(232, 238, 243, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo" onclick="scrollToSection('home')">
+                <div class="logo-icon">M</div>
+                MySQL Mastery
+            </div>
+            <ul class="nav-links">
+                <li><a onclick="scrollToSection('home')">Home</a></li>
+                <li><a onclick="scrollToSection('what-is')">What is MySQL</a></li>
+                <li><a onclick="scrollToSection('installation')">Installation</a></li>
+                <li><a onclick="scrollToSection('concepts')">Core Concepts</a></li>
+                <li><a onclick="scrollToSection('interview')">Interview Q&A</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Master <span class="highlight">MySQL</span> in 2026</h1>
+                <p>From beginner to advanced - learn database development through hands-on, practical examples and interactive tutorials.</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('what-is')">Start Learning 🚀</button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('interview')">Interview Prep 📚</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="database-illustration">
+                    <div class="db-cylinder">
+                        <div class="db-icon">🗄️</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What is MySQL Section -->
+    <section id="what-is">
+        <div class="section-header">
+            <h2>What is MySQL?</h2>
+            <p>MySQL is the world's most popular open-source relational database management system. Let's understand how it works.</p>
+        </div>
+
+        <div class="concept-grid">
+            <div class="concept-card">
+                <div class="concept-icon">🗃️</div>
+                <h3>Relational Database</h3>
+                <p>MySQL stores data in structured tables with rows and columns, allowing you to establish relationships between different pieces of data through foreign keys.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">⚡</div>
+                <h3>Client-Server Model</h3>
+                <p>MySQL operates using a client-server architecture where the server manages the database and responds to client requests for data storage and retrieval.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">🔐</div>
+                <h3>ACID Compliant</h3>
+                <p>Ensures data reliability through Atomicity, Consistency, Isolation, and Durability - critical for business applications and financial transactions.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">🌐</div>
+                <h3>Open Source</h3>
+                <p>Free to use and backed by a massive community. MySQL powers millions of websites including Facebook, Twitter, YouTube, and Netflix.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">📊</div>
+                <h3>Scalable & Fast</h3>
+                <p>Handles millions of queries per day with excellent performance. Scales from small applications to enterprise-level systems effortlessly.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">🛠️</div>
+                <h3>Multi-Platform</h3>
+                <p>Works seamlessly across Windows, Linux, macOS, and cloud platforms. Integrates with all major programming languages and frameworks.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation">
+        <div class="section-header">
+            <h2>Installation & Setup</h2>
+            <p>Get MySQL up and running on your system in minutes</p>
+        </div>
+
+        <div class="installation-tabs">
+            <button class="tab-btn active" onclick="showTab(event, 'windows')">🪟 Windows</button>
+            <button class="tab-btn" onclick="showTab(event, 'linux')">🐧 Linux</button>
+            <button class="tab-btn" onclick="showTab(event, 'macos')">🍎 macOS</button>
+        </div>
+
+        <div id="windows" class="tab-content active">
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Download MySQL Installer</h4>
+                        <p>Visit <strong>mysql.com/downloads</strong> and download the MySQL Installer for Windows. Choose the "MySQL Installer Community" version (free).</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Run the Installer</h4>
+                        <p>Double-click the downloaded .msi file and choose "Developer Default" for a complete installation including MySQL Server, Workbench, and connectors.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Configure MySQL Server</h4>
+                        <p>Set a root password (remember this!), configure the server as a Windows Service, and choose the default port 3306.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Complete Installation</h4>
+                        <p>Click "Execute" to apply the configuration. Once complete, you can launch MySQL Workbench to start working with databases.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="linux" class="tab-content">
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Update Package Index</h4>
+                        <p>Open terminal and update your package list</p>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">BASH</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>sudo apt update</code></pre>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Install MySQL Server</h4>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">BASH</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>sudo apt install mysql-server</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div id="macos" class="tab-content">
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Install Homebrew</h4>
+                        <p>If you don't have Homebrew installed</p>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">BASH</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Install MySQL</h4>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">BASH</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>brew install mysql</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Concepts Section -->
+    <section id="concepts">
+        <div class="section-header">
+            <h2>MySQL Core Concepts</h2>
+            <p>Master the fundamental building blocks of database design</p>
+        </div>
+
+        <div class="concept-grid">
+            <div class="concept-card">
+                <div class="concept-icon">🗄️</div>
+                <h3>Databases & Tables</h3>
+                <p>A <strong>database</strong> is a container for related data. Within it, <strong>tables</strong> organize data into rows (records) and columns (fields). Think of a table like an Excel spreadsheet.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">🔑</div>
+                <h3>Primary Key</h3>
+                <p>A unique identifier for each row in a table. No two rows can have the same primary key value. Example: <code>user_id</code> in a users table.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">🔗</div>
+                <h3>Foreign Key</h3>
+                <p>Creates relationships between tables by referencing a primary key in another table. Ensures referential integrity across related data.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">⚡</div>
+                <h3>Indexes</h3>
+                <p>Speed up data retrieval by creating a lookup structure. Like a book's index, they help MySQL find data quickly without scanning entire tables.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">📊</div>
+                <h3>Data Types</h3>
+                <p>Define what kind of data a column can store: <code>INT</code> (numbers), <code>VARCHAR</code> (text), <code>DATE</code> (dates), <code>DECIMAL</code> (precise numbers), etc.</p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-icon">✅</div>
+                <h3>Constraints</h3>
+                <p>Rules that enforce data integrity: <code>NOT NULL</code> (required), <code>UNIQUE</code> (no duplicates), <code>DEFAULT</code> (automatic values).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interview Questions Section - NEW FOR 2026 -->
+    <section id="interview">
+        <div class="section-header">
+            <h2>MySQL Interview Questions & Answers (2026)</h2>
+            <p>Prepare for your next database interview with these comprehensive questions</p>
+        </div>
+
+        <div class="interview-section">
+            <div class="qa-container">
+                <!-- Question 1 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>What is the difference between INNER JOIN and LEFT JOIN?
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p><strong>INNER JOIN:</strong> Returns only the rows where there is a match in both tables. If a row in the left table doesn't have a matching row in the right table, it won't appear in the result.</p>
+                        <p><strong>LEFT JOIN (or LEFT OUTER JOIN):</strong> Returns all rows from the left table, and the matched rows from the right table. If there's no match, NULL values are returned for the right table's columns.</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SQL Example</span>
+                            </div>
+                            <pre><code><span class="comment">-- INNER JOIN: Only users with orders</span>
+<span class="keyword">SELECT</span> users.name, orders.total
+<span class="keyword">FROM</span> users
+<span class="keyword">INNER JOIN</span> orders <span class="keyword">ON</span> users.id = orders.user_id;
+
+<span class="comment">-- LEFT JOIN: All users, even without orders</span>
+<span class="keyword">SELECT</span> users.name, orders.total
+<span class="keyword">FROM</span> users
+<span class="keyword">LEFT JOIN</span> orders <span class="keyword">ON</span> users.id = orders.user_id;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>Explain ACID properties in MySQL
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p>ACID stands for Atomicity, Consistency, Isolation, and Durability - four key properties that guarantee reliable database transactions:</p>
+                        <ul>
+                            <li><strong>Atomicity:</strong> A transaction is treated as a single unit - either all operations succeed or all fail. If any part fails, the entire transaction is rolled back.</li>
+                            <li><strong>Consistency:</strong> A transaction brings the database from one valid state to another valid state, maintaining all defined rules and constraints.</li>
+                            <li><strong>Isolation:</strong> Concurrent transactions execute independently without interfering with each other. Changes made in one transaction are invisible to other transactions until committed.</li>
+                            <li><strong>Durability:</strong> Once a transaction is committed, the changes are permanent, even in case of system crashes or power failures.</li>
+                        </ul>
+                        <p><strong>Example:</strong> When transferring money between bank accounts, ACID ensures the debit and credit happen together (Atomicity), account balances remain valid (Consistency), other transactions don't see partial changes (Isolation), and the transfer persists (Durability).</p>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>What are indexes and when should you use them?
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p>An <strong>index</strong> is a data structure that improves the speed of data retrieval operations on a table. Think of it like a book's index - it helps you find information quickly without reading every page.</p>
+                        <p><strong>When to use indexes:</strong></p>
+                        <ul>
+                            <li>Columns frequently used in WHERE clauses</li>
+                            <li>Columns used in JOIN conditions</li>
+                            <li>Columns used in ORDER BY or GROUP BY</li>
+                            <li>Columns with high cardinality (many unique values)</li>
+                        </ul>
+                        <p><strong>When NOT to use indexes:</strong></p>
+                        <ul>
+                            <li>Small tables (full table scan is faster)</li>
+                            <li>Columns with frequent INSERT/UPDATE/DELETE operations (indexes slow these down)</li>
+                            <li>Columns with low cardinality (few unique values like boolean)</li>
+                        </ul>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SQL Example</span>
+                            </div>
+                            <pre><code><span class="comment">-- Creating an index</span>
+<span class="keyword">CREATE INDEX</span> idx_email <span class="keyword">ON</span> users(email);
+
+<span class="comment">-- Creating a composite index</span>
+<span class="keyword">CREATE INDEX</span> idx_name_age <span class="keyword">ON</span> users(last_name, first_name, age);</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>What is normalization? Explain 1NF, 2NF, and 3NF
+                            <span class="difficulty-badge difficulty-hard">Hard</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p><strong>Normalization</strong> is the process of organizing data to reduce redundancy and improve data integrity. Here are the first three normal forms:</p>
+                        <p><strong>First Normal Form (1NF):</strong></p>
+                        <ul>
+                            <li>Each column contains atomic (indivisible) values</li>
+                            <li>Each column contains values of a single type</li>
+                            <li>Each row is unique</li>
+                            <li>No repeating groups or arrays</li>
+                        </ul>
+                        <p><strong>Second Normal Form (2NF):</strong></p>
+                        <ul>
+                            <li>Must be in 1NF</li>
+                            <li>All non-key columns are fully dependent on the primary key</li>
+                            <li>No partial dependencies on composite keys</li>
+                        </ul>
+                        <p><strong>Third Normal Form (3NF):</strong></p>
+                        <ul>
+                            <li>Must be in 2NF</li>
+                            <li>No transitive dependencies (non-key columns shouldn't depend on other non-key columns)</li>
+                            <li>All columns depend only on the primary key</li>
+                        </ul>
+                        <p><strong>Example:</strong> A table storing (StudentID, StudentName, CourseID, CourseName, InstructorName) violates 2NF because CourseName and InstructorName depend on CourseID, not StudentID. Split into Students, Courses, and Enrollments tables to achieve 3NF.</p>
+                    </div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>Explain the difference between DELETE, TRUNCATE, and DROP
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p><strong>DELETE:</strong></p>
+                        <ul>
+                            <li>Removes specific rows based on a WHERE condition</li>
+                            <li>Can be rolled back (supports transactions)</li>
+                            <li>Triggers are fired</li>
+                            <li>Slower for large datasets (logs each row deletion)</li>
+                            <li>Does not reset AUTO_INCREMENT counter</li>
+                        </ul>
+                        <p><strong>TRUNCATE:</strong></p>
+                        <ul>
+                            <li>Removes all rows from a table</li>
+                            <li>Cannot be rolled back (DDL statement)</li>
+                            <li>Triggers are NOT fired</li>
+                            <li>Faster than DELETE for large tables</li>
+                            <li>Resets AUTO_INCREMENT counter to initial value</li>
+                        </ul>
+                        <p><strong>DROP:</strong></p>
+                        <ul>
+                            <li>Removes the entire table structure and data</li>
+                            <li>Cannot be rolled back</li>
+                            <li>Frees up table space completely</li>
+                            <li>Removes table definition from database</li>
+                        </ul>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SQL Example</span>
+                            </div>
+                            <pre><code><span class="keyword">DELETE FROM</span> users <span class="keyword">WHERE</span> age < <span class="number">18</span>;  <span class="comment">-- Remove specific rows</span>
+
+<span class="keyword">TRUNCATE TABLE</span> users;  <span class="comment">-- Remove all rows, keep table</span>
+
+<span class="keyword">DROP TABLE</span> users;  <span class="comment">-- Remove table entirely</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 6 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>What are transactions and how do you use them?
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p>A <strong>transaction</strong> is a sequence of one or more SQL operations treated as a single unit of work. All operations must succeed together, or the database remains unchanged.</p>
+                        <p><strong>Key commands:</strong></p>
+                        <ul>
+                            <li><code>START TRANSACTION</code> or <code>BEGIN</code> - Initiates a transaction</li>
+                            <li><code>COMMIT</code> - Saves all changes permanently</li>
+                            <li><code>ROLLBACK</code> - Undoes all changes since the transaction started</li>
+                            <li><code>SAVEPOINT</code> - Creates a point within a transaction to rollback to</li>
+                        </ul>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SQL Example - Money Transfer</span>
+                            </div>
+                            <pre><code><span class="keyword">START TRANSACTION</span>;
+
+<span class="comment">-- Deduct from sender</span>
+<span class="keyword">UPDATE</span> accounts 
+<span class="keyword">SET</span> balance = balance - <span class="number">100</span> 
+<span class="keyword">WHERE</span> account_id = <span class="number">123</span>;
+
+<span class="comment">-- Add to receiver</span>
+<span class="keyword">UPDATE</span> accounts 
+<span class="keyword">SET</span> balance = balance + <span class="number">100</span> 
+<span class="keyword">WHERE</span> account_id = <span class="number">456</span>;
+
+<span class="comment">-- If both succeed, commit</span>
+<span class="keyword">COMMIT</span>;
+
+<span class="comment">-- If any fails, rollback</span>
+<span class="keyword">ROLLBACK</span>;</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 7 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>What is the difference between CHAR and VARCHAR?
+                            <span class="difficulty-badge difficulty-easy">Easy</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p><strong>CHAR(n):</strong></p>
+                        <ul>
+                            <li>Fixed-length character string</li>
+                            <li>Always uses exactly n bytes of storage (padded with spaces)</li>
+                            <li>Faster for fixed-size data (e.g., country codes, phone numbers)</li>
+                            <li>Maximum length: 255 characters</li>
+                        </ul>
+                        <p><strong>VARCHAR(n):</strong></p>
+                        <ul>
+                            <li>Variable-length character string</li>
+                            <li>Uses only the space needed (plus 1-2 bytes for length)</li>
+                            <li>Better for variable-size data (names, emails, addresses)</li>
+                            <li>Maximum length: 65,535 characters</li>
+                        </ul>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">SQL Example</span>
+                            </div>
+                            <pre><code><span class="keyword">CREATE TABLE</span> users (
+    country_code <span class="keyword">CHAR</span>(<span class="number">2</span>),        <span class="comment">-- Always 2 chars: 'US', 'UK'</span>
+    name <span class="keyword">VARCHAR</span>(<span class="number">100</span>),          <span class="comment">-- Variable: 'John' uses 4 bytes</span>
+    zip_code <span class="keyword">CHAR</span>(<span class="number">5</span>),           <span class="comment">-- Fixed: '12345'</span>
+    email <span class="keyword">VARCHAR</span>(<span class="number">255</span>)         <span class="comment">-- Variable length emails</span>
+);</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 8 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>Explain the difference between MyISAM and InnoDB storage engines
+                            <span class="difficulty-badge difficulty-hard">Hard</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p><strong>InnoDB</strong> (Default in modern MySQL):</p>
+                        <ul>
+                            <li><strong>Transactions:</strong> Supports ACID transactions with COMMIT and ROLLBACK</li>
+                            <li><strong>Foreign Keys:</strong> Enforces referential integrity</li>
+                            <li><strong>Locking:</strong> Row-level locking (better for concurrent writes)</li>
+                            <li><strong>Crash Recovery:</strong> Automatic crash recovery</li>
+                            <li><strong>Performance:</strong> Better for applications with many INSERT/UPDATE operations</li>
+                            <li><strong>Use case:</strong> E-commerce, financial apps, any OLTP system</li>
+                        </ul>
+                        <p><strong>MyISAM:</strong></p>
+                        <ul>
+                            <li><strong>Transactions:</strong> No transaction support</li>
+                            <li><strong>Foreign Keys:</strong> Does not support foreign keys</li>
+                            <li><strong>Locking:</strong> Table-level locking (slower for writes)</li>
+                            <li><strong>Speed:</strong> Faster for read-heavy workloads</li>
+                            <li><strong>Full-text search:</strong> Better full-text search capabilities (historically)</li>
+                            <li><strong>Use case:</strong> Read-heavy applications, data warehousing, archival data</li>
+                        </ul>
+                        <p><strong>2026 Recommendation:</strong> Use InnoDB for almost everything. MyISAM is largely deprecated and InnoDB now supports full-text search as well.</p>
+                    </div>
+                </div>
+
+                <!-- Question 9 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>How do you optimize a slow MySQL query?
+                            <span class="difficulty-badge difficulty-hard">Hard</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p><strong>Query Optimization Strategies:</strong></p>
+                        <ol>
+                            <li><strong>Use EXPLAIN:</strong> Analyze query execution plan
+                                <div class="code-block">
+                                    <pre><code><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'user@example.com'</span>;</code></pre>
+                                </div>
+                            </li>
+                            <li><strong>Add Indexes:</strong> Create indexes on columns used in WHERE, JOIN, ORDER BY</li>
+                            <li><strong>Avoid SELECT *:</strong> Only select needed columns</li>
+                            <li><strong>Use LIMIT:</strong> Reduce result set size when possible</li>
+                            <li><strong>Optimize JOINs:</strong> Ensure JOIN columns are indexed</li>
+                            <li><strong>Avoid Functions on Indexed Columns:</strong>
+                                <div class="code-block">
+                                    <pre><code><span class="comment">-- Bad: Function prevents index use</span>
+<span class="keyword">WHERE</span> <span class="function">YEAR</span>(created_at) = <span class="number">2026</span>
+
+<span class="comment">-- Good: Use index-friendly range</span>
+<span class="keyword">WHERE</span> created_at >= <span class="string">'2026-01-01'</span> <span class="keyword">AND</span> created_at < <span class="string">'2027-01-01'</span></code></pre>
+                                </div>
+                            </li>
+                            <li><strong>Use Covering Indexes:</strong> Include all queried columns in the index</li>
+                            <li><strong>Partition Large Tables:</strong> Split tables by date, region, etc.</li>
+                            <li><strong>Cache Results:</strong> Use query cache or application-level caching (Redis, Memcached)</li>
+                            <li><strong>Denormalize When Needed:</strong> For read-heavy workloads, some redundancy can improve performance</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Question 10 -->
+                <div class="qa-card" onclick="toggleAnswer(this)">
+                    <div class="qa-question">
+                        <h4>What are prepared statements and why should you use them?
+                            <span class="difficulty-badge difficulty-medium">Medium</span>
+                        </h4>
+                        <span class="qa-icon">▼</span>
+                    </div>
+                    <div class="qa-answer">
+                        <p><strong>Prepared statements</strong> are pre-compiled SQL statements that separate SQL logic from data, offering two major benefits:</p>
+                        <p><strong>1. Security (SQL Injection Prevention):</strong></p>
+                        <ul>
+                            <li>User input is treated as data, not executable code</li>
+                            <li>Prevents malicious SQL injection attacks</li>
+                        </ul>
+                        <p><strong>2. Performance:</strong></p>
+                        <ul>
+                            <li>SQL is parsed and optimized once, then reused with different parameters</li>
+                            <li>Faster execution when running the same query multiple times with different values</li>
+                        </ul>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">PHP Example</span>
+                            </div>
+                            <pre><code><span class="comment">// Bad: Vulnerable to SQL injection</span>
+$sql = <span class="string">"SELECT * FROM users WHERE email = '"</span> . $_POST[<span class="string">'email'</span>] . <span class="string">"'"</span>;
+
+<span class="comment">// Good: Protected with prepared statement</span>
+$stmt = $pdo->prepare(<span class="string">"SELECT * FROM users WHERE email = ?"</span>);
+$stmt->execute([$_POST[<span class="string">'email'</span>]]);
+
+<span class="comment">// Or with named parameters</span>
+$stmt = $pdo->prepare(<span class="string">"SELECT * FROM users WHERE email = :email"</span>);
+$stmt->execute([<span class="string">'email'</span> => $_POST[<span class="string">'email'</span>]]);</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>MySQL Mastery 2026</h3>
+                <p>Your comprehensive guide to learning MySQL from beginner to advanced level with real-world examples and hands-on projects.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a onclick="scrollToSection('what-is')">What is MySQL</a></li>
+                    <li><a onclick="scrollToSection('installation')">Installation Guide</a></li>
+                    <li><a onclick="scrollToSection('concepts')">Core Concepts</a></li>
+                    <li><a onclick="scrollToSection('interview')">Interview Prep</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="https://dev.mysql.com/doc/" target="_blank">Official MySQL Docs</a></li>
+                    <li><a href="https://www.mysqltutorial.org/" target="_blank">MySQL Tutorial</a></li>
+                    <li><a href="https://stackoverflow.com/questions/tagged/mysql" target="_blank">Stack Overflow</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Community</h3>
+                <ul class="footer-links">
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">Discord</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 MySQL Mastery. Built for learners, by developers. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to top button -->
+    <div class="scroll-top" id="scrollTop" onclick="scrollToTop()">
+        ↑
+    </div>
+
+    <script>
+        // Fixed Navigation Scroll Function
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                const offsetTop = element.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Installation tabs
+        function showTab(event, os) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(os).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = 'var(--success)';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            });
+        }
+
+        // Toggle Interview Q&A
+        function toggleAnswer(card) {
+            card.classList.toggle('active');
+        }
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe cards
+        document.querySelectorAll('.concept-card, .qa-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
